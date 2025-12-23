@@ -53,7 +53,6 @@ public class Main {
 
         //Interface
         String choice = null;
-        int num = 0;
         int init = 0;
         String word = null;
         String sentence = "";
@@ -61,15 +60,11 @@ public class Main {
         Random random = new Random();
 
         while(!"x".equals(choice)){
-            System.out.println("g: Generate a sentence | x: Exit");
+            System.out.println("g: Generate a sentence | w: Check a word and it's follow-ups | x: Exit");
             choice = in.nextLine();
+
             switch(choice){
                 case "g":
-                    System.out.println("What length do you wish your sentence to be?");
-                    num = Integer.parseInt(in.nextLine());
-
-                    System.out.println("Generating a sentence with " + num + " words.");
-
                     sentence = "";
                     word = null;
 
@@ -79,7 +74,7 @@ public class Main {
                     sentence = word + " ";
 
                     //Chooses the next word based on the current one
-                    for(int i = 1; i < num; i++){
+                    while(!word.endsWith(".")){
                         Word current = null;
 
                         //Finding the right word
@@ -99,8 +94,34 @@ public class Main {
                         }
                         sentence += word + " ";
                     }
+
+                    //Capitalizes the sentence
+                    sentence = sentence.substring(0, 1).toUpperCase() + sentence.substring(1);
+
                     System.out.println("Here is your sentence:");
                     System.out.println(sentence);
+                    break;
+
+                case "w":
+                    System.out.print("What word would you like to check? ");
+                    choice = in.nextLine();
+
+                    //Checks if the word exists in the databank
+                    Word current = null;
+                    for(Word search : wordBank){
+                        if(search.getCurrent().equals(choice)) {
+                            current = search;
+                            break;
+                        }
+                    }
+
+                    if(current != null){
+                        System.out.println("The word '" + choice + "' has " + current.getNext().size() + " follow-ups:");
+                        System.out.println(current.getNext());
+                    }
+                    else{
+                        System.out.println("The word '" + choice + "' was not found.");
+                    }
                     break;
 
                 case "x":
